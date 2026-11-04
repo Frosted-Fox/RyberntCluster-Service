@@ -58,6 +58,13 @@ fi
 
 echo "Installing Rybernt Cluster..."
 apt-get update
+echo "Installing backup requirements..."
+if ! apt-get install -y restic; then
+    echo "Could not install the required Restic package." >&2
+    echo "On Ubuntu, make sure the Universe repository is enabled, then rerun this installer." >&2
+    exit 1
+fi
+
 apt-get install -y "$TEMP_DIR/$PACKAGE"
 
 if [ ! -x /usr/lib/rybernt/setup.sh ]; then
