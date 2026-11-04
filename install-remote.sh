@@ -3,6 +3,29 @@ set -eu
 
 REPOSITORY=Frosted-Fox/RyberntCluster-Service
 PACKAGE=rybernt-backup_amd64.deb
+ENROLLMENT_TOKEN=
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --token)
+            if [ "$#" -lt 2 ] || [ -z "$2" ] || [ -n "$ENROLLMENT_TOKEN" ]; then
+                echo "Usage: sudo sh install-remote.sh [--token ONE_TIME_TOKEN]" >&2
+                exit 2
+            fi
+            ENROLLMENT_TOKEN=$2
+            shift 2
+            ;;
+        --help|-h)
+            echo "Usage: sudo sh install-remote.sh [--token ONE_TIME_TOKEN]"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1" >&2
+            echo "Usage: sudo sh install-remote.sh [--token ONE_TIME_TOKEN]" >&2
+            exit 2
+            ;;
+    esac
+done
 
 if [ "$(id -u)" -ne 0 ]; then
     echo "Run Rybernt Cluster setup as root: sudo sh install-remote.sh" >&2
@@ -72,4 +95,8 @@ if [ ! -x /usr/lib/rybernt/setup.sh ]; then
     exit 1
 fi
 
-exec /usr/lib/rybernt/setup.sh </dev/tty
+if [ -n "$ENROLLMENT_TOKEN" ]; then
+    RNB_ENROLLMENT_TOKEN=$ENROLLMENT_TOKEN /usr/lib/rybernt/setup.sh </dev/tty
+else
+    /usr/lib/rybernt/setup.sh </dev/tty
+fi

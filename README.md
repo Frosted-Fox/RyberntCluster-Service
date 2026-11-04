@@ -17,6 +17,15 @@ cd RyberntCluster-Service
 sudo sh install-remote.sh
 ```
 
+For one-time token enrollment, you can pass the token during installation:
+
+```sh
+sudo sh install-remote.sh --token "$TOKEN"
+```
+
+The token is exposed in shell history and process arguments when using this
+option. The default masked prompt is safer.
+
 Follow the on-screen instructions to finish setup.
 
 ## Open Rybernt Cluster
