@@ -16,7 +16,17 @@ jobs:
       - name: Publish Debian packages
         uses: softprops/action-gh-release@v2
         with:
-          generate_release_notes: true
+          name: Rybernt Cluster ${{ github.ref_name }}
+          generate_release_notes: false
+          body: |
+            ## Rybernt Cluster ${{ github.ref_name }}
+
+            - Use an explicit Yes/No choice to confirm restores, defaulting safely to No.
+            - Include the Debian package and SHA-256 checksums.
+
+            ## Contributor
+
+            - Ariyan Kumar
           files: |
             dist/rybernt-backup_amd64.deb
             dist/rybernt-backup_*_amd64.deb
