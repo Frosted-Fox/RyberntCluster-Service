@@ -6,16 +6,19 @@ with a simple setup and dashboard for backups and restores.
 ## Requirements
 
 - Debian or Ubuntu on `amd64`
-- GitHub CLI (`gh`) signed in with access to the private Rybernt Cluster release
+- `curl` and `sha256sum` (available by default on most Debian/Ubuntu systems)
 
 ## Install
 
 ```sh
-gh auth login --hostname github.com
-gh repo clone Frosted-Fox/RyberntCluster-Service
-cd RyberntCluster-Service
+curl -fsSL https://raw.githubusercontent.com/Frosted-Fox/RyberntCluster-Service/main/install-remote.sh \
+  -o install-remote.sh
 sudo sh install-remote.sh
 ```
+
+The installer downloads the latest public GitHub release directly and verifies
+the package using its published SHA-256 checksum. GitHub CLI authentication is
+not required.
 
 For one-time token enrollment, you can pass the token during installation:
 

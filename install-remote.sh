@@ -3,6 +3,7 @@ set -eu
 
 REPOSITORY=Frosted-Fox/RyberntCluster-Service
 PACKAGE=rybernt-backup_amd64.deb
+RELEASE_URL=https://github.com/$REPOSITORY/releases/latest/download
 ENROLLMENT_TOKEN=
 
 while [ "$#" -gt 0 ]; do
@@ -38,10 +39,8 @@ if [ ! -r /dev/tty ]; then
 fi
 
 if ! command -v curl >/dev/null 2>&1 ||
-   ! command -v sha256sum >/dev/null 2>&1 ||
-   ! command -v gh >/dev/null 2>&1; then
-    echo "Rybernt Cluster setup requires curl, sha256sum, and GitHub CLI (gh)." >&2
-    echo "Sign in with: gh auth login --hostname github.com" >&2
+   ! command -v sha256sum >/dev/null 2>&1; then
+    echo "Rybernt Cluster setup requires curl and sha256sum." >&2
     exit 1
 fi
 
@@ -60,20 +59,10 @@ trap cleanup EXIT
 trap 'exit 1' HUP INT TERM
 
 echo "Downloading the latest Rybernt Cluster release..."
-if [ -n "${SUDO_USER:-}" ] && [ "$SUDO_USER" != root ]; then
-    if ! GH_TOKEN=$(sudo -u "$SUDO_USER" gh auth token --hostname github.com); then
-        echo "Rybernt Cluster release access is not configured for $SUDO_USER." >&2
-        echo "Sign in with: gh auth login --hostname github.com" >&2
-        exit 1
-    fi
-    export GH_TOKEN
-    gh release download --repo "$REPOSITORY" --pattern "$PACKAGE" \
-        --pattern SHA256SUMS --dir "$TEMP_DIR"
-    unset GH_TOKEN
-else
-    gh release download --repo "$REPOSITORY" --pattern "$PACKAGE" \
-        --pattern SHA256SUMS --dir "$TEMP_DIR"
-fi
+curl --fail --location --silent --show-error --retry 3 \
+    "$RELEASE_URL/$PACKAGE" --output "$TEMP_DIR/$PACKAGE"
+curl --fail --location --silent --show-error --retry 3 \
+    "$RELEASE_URL/SHA256SUMS" --output "$TEMP_DIR/SHA256SUMS"
 (
     cd "$TEMP_DIR"
     sha256sum --check --ignore-missing SHA256SUMS
