@@ -20,6 +20,10 @@ The installer downloads the latest public GitHub release directly and verifies
 the package using its published SHA-256 checksum. GitHub CLI authentication is
 not required.
 
+On systems with systemd, setup enables the scheduled backup service.
+Containers without systemd can complete setup, but scheduled backups will not
+run automatically; use a systemd host for unattended backups.
+
 For one-time token enrollment, you can pass the token during installation:
 
 ```sh

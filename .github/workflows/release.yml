@@ -21,7 +21,8 @@ jobs:
           body: |
             ## Rybernt Cluster ${{ github.ref_name }}
 
-            - Use an explicit Yes/No choice to confirm restores, defaulting safely to No.
+            - Complete setup in containers without systemd, with a clear notice that scheduled backups remain inactive.
+            - Make the downloaded Debian package accessible to apt's sandbox user.
             - Include the Debian package and SHA-256 checksums.
 
             ## Contributor

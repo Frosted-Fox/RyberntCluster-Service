@@ -52,6 +52,7 @@ if ! command -v apt-get >/dev/null 2>&1 ||
 fi
 
 TEMP_DIR=$(mktemp -d /tmp/rybernt-cluster.XXXXXX)
+chmod 0755 "$TEMP_DIR"
 cleanup() {
     rm -rf "$TEMP_DIR"
 }
@@ -63,6 +64,7 @@ curl --fail --location --silent --show-error --retry 3 \
     "$RELEASE_URL/$PACKAGE" --output "$TEMP_DIR/$PACKAGE"
 curl --fail --location --silent --show-error --retry 3 \
     "$RELEASE_URL/SHA256SUMS" --output "$TEMP_DIR/SHA256SUMS"
+chmod 0644 "$TEMP_DIR/$PACKAGE"
 (
     cd "$TEMP_DIR"
     sha256sum --check --ignore-missing SHA256SUMS
